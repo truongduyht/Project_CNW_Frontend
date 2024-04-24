@@ -6,8 +6,8 @@ import { computed } from "vue";
 import axios from "axios";
 
 import ModalAddPublish from "./ModalPublish/ModalAddPublish.vue";
-// import ModalUpdateBook from "./ModalBook/ModalUpdateBook.vue";
-// import ModalDeleteBook from "./ModalBook/ModalDeleteBook.vue";
+import ModalUpdatePublish from "./ModalPublish/ModalUpdatePublish.vue";
+import ModalDeletePublish from "./ModalPublish/ModalDeletePublish.vue";
 
 import Service from "../../../service/api";
 
@@ -127,6 +127,18 @@ watch(
     <ModalAddPublish
       :isShowModalAdd="isShowModalAdd"
       :closeModalAdd="closeModalAdd"
+      :fetchData="fetchData"
+    />
+    <ModalUpdatePublish
+      :isShowModalUpdate="isShowModalUpdate"
+      :closeModalUpdate="closeModalUpdate"
+      :dataModalUpdate="dataModalUpdate"
+      :fetchData="fetchData"
+    />
+    <ModalDeletePublish
+      :isShowModalDelete="isShowModalDelete"
+      :closeModalDelete="closeModalDelete"
+      :dataModalDelete="dataModalDelete"
       :fetchData="fetchData"
     />
   </div>

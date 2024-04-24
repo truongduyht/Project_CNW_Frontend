@@ -17,8 +17,8 @@ const value = ref(4);
       <img
         :src="props?.url"
         alt="notFound"
-        height="200"
-        width="200"
+        height="190"
+        width="180"
         class="object-fit-cover"
       />
     </div>

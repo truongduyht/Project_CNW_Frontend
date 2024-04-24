@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { InputNumber, Upload } from "ant-design-vue";
 import Service from "../../../../service/api.js";
 import { toast } from "vue3-toastify";
@@ -11,6 +11,8 @@ const props = defineProps({
   fetchData: Function,
 });
 
+const listPublish = ref([]);
+
 const TenSach = ref("");
 const TacGia = ref("");
 const DonGia = ref(0);
@@ -18,7 +20,7 @@ const SoQuyen = ref(0);
 const TheLoai = ref("");
 const NamXB = ref("");
 const AnhSach = ref("");
-const TenNXB = ref("");
+const MaNXB = ref("");
 
 const confirmLoading = ref(false);
 
@@ -31,6 +33,9 @@ const handleChangeImage = (info) => {
 // Xử lí chọn thể loại
 const handleChangeSelectType = (value) => {
   TheLoai.value = value;
+};
+const handleChangeSelectMaNXB = (value) => {
+  MaNXB.value = value;
 };
 
 // Price
@@ -52,10 +57,22 @@ const handleClose = () => {
   NamXB.value = "";
   AnhSach.value = "";
   TheLoai.value = "";
-  TenNXB.value = "";
+  MaNXB.value = "";
   props.closeModalAdd();
   props.fetchData();
 };
+
+const fetchData = async () => {
+  const data = await Service.getAll_Publish();
+  if (data && data.data.EC === 1) {
+    listPublish.value = data.data.DT;
+  }
+};
+onMounted(() => {
+  fetchData();
+});
+console.log(listPublish);
+// const res = Service.getAll_Publish();
 
 // Xử lí submit FORM
 const handleSucces = async () => {
@@ -69,9 +86,9 @@ const handleSucces = async () => {
     formData.append("SoQuyen", parseInt(SoQuyen.value, 10));
     formData.append("TheLoai", TheLoai.value);
     formData.append("TacGia", TacGia.value);
-    formData.append("TenNXB", TenNXB.value);
+    formData.append("MaNXB", MaNXB.value);
     formData.append("AnhSach", AnhSach.value);
-
+    console.log(MaNXB);
     confirmLoading.value = true;
     const res = await Service.create_Book(formData);
     confirmLoading.value = false;
@@ -111,7 +128,21 @@ const handleSucces = async () => {
         </div>
         <div class="mb-3">
           <label class="form-label">Nhà Xuất Bản</label>
-          <input v-model="TenNXB" type="text" class="form-control" />
+          <a-select
+            ref="select"
+            v-model="MaNXB"
+            style="width: 468px"
+            @focus="focus"
+            @change="handleChangeSelectMaNXB"
+          >
+            <a-select-option
+              v-for="item in listPublish"
+              :value="item._id"
+              :key="item._id"
+            >
+              {{ item.TenNXB }}</a-select-option
+            >
+          </a-select>
         </div>
         <div class="mb-3 row">
           <div class="col-6">
@@ -120,7 +151,6 @@ const handleSucces = async () => {
           </div>
           <div class="col-6">
             <label class="form-label">Thể loại</label>
-
             <a-select
               ref="select"
               style="width: 220px"

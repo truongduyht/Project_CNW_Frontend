@@ -74,7 +74,7 @@ const handleAddCart = async () => {
           </button>
         </router-link>
       </div>
-      <div class="row">
+      <div class="row ms-4">
         <div class="col-5">
           <div class="image-container">
             <img

@@ -1,8 +1,8 @@
 <script setup>
-import { onMounted, ref, watch, watchEffect } from "vue";
-import { InputNumber, Upload } from "ant-design-vue";
-import Service from "../../../../service/api.js";
+import { onMounted, ref, watchEffect } from "vue";
 import { toast } from "vue3-toastify";
+import { Modal, InputNumber, Upload } from "ant-design-vue";
+import Service from "../../../../service/api.js";
 
 const props = defineProps({
   closeModalUpdate: Function,
@@ -14,29 +14,27 @@ const props = defineProps({
 const dataUpdate = ref({
   id: "",
   TenSach: "",
-  DonGia: 0,
-  SoQuyen: 0,
-  NamXB: "",
+  MaNXB: "",
   TheLoai: "",
   TacGia: "",
-  TenNXB: "",
+  NamXB: "",
   AnhSach: "",
+  DonGia: 0,
+  SoQuyen: 0,
 });
+const listPublish = ref([]);
+
 const confirmLoading = ref(false);
-
 const imagePage = ref("");
-
 watchEffect(() => {
   dataUpdate.value.id = props.dataModalUpdate._id || "";
-  dataUpdate.value.TenSach = props.dataModalUpdate.TenSach || "";
-  dataUpdate.value.TheLoai = props.dataModalUpdate.TheLoai || "";
+  dataUpdate.value.MaNXB = props.dataModalUpdate.MaNXB || "";
+  dataUpdate.value.TacGia = props.dataModalUpdate.TacGia || "";
   dataUpdate.value.DonGia = props.dataModalUpdate.DonGia || "";
   dataUpdate.value.SoQuyen = props.dataModalUpdate.SoQuyen || "";
+  dataUpdate.value.TheLoai = props.dataModalUpdate.TheLoai || "";
+  dataUpdate.value.TenSach = props.dataModalUpdate.TenSach || "";
   dataUpdate.value.NamXB = props.dataModalUpdate.NamXB || "";
-  dataUpdate.value.TacGia = props.dataModalUpdate.TacGia || "";
-  dataUpdate.value.TenNXB = props.dataModalUpdate.TenNXB || "";
-  dataUpdate.value.AnhSach = props.dataModalUpdate.AnhSach || "";
-  // Cập nhật các biến ref khác tương tự ở đây
   imagePage.value = props.dataModalUpdate.AnhSach || "";
 });
 
@@ -45,38 +43,50 @@ const handleChangeImage = (info) => {
   const file = info.file.originFileObj;
   dataUpdate.value.AnhSach = file;
 };
-
-// Goi API thanh cong xóa dữ liệu và đóng đi
 const handleClose = () => {
   props.closeModalUpdate();
 };
 
-// Xử lí submit FORM
-const handleSucces = async () => {
+const fetchData = async () => {
+  const data = await Service.getAll_Publish();
+  if (data && data.data.EC === 1) {
+    listPublish.value = data.data.DT;
+  }
+};
+onMounted(() => {
+  fetchData();
+});
+const handleSuccess = async () => {
+  confirmLoading.value = true;
+
   try {
-    const formData = new FormData();
-    formData.append("id", dataUpdate.value.id);
-    formData.append("TenSach", dataUpdate.value.TenSach);
-    formData.append("DonGia", parseInt(dataUpdate.value.DonGia, 10));
-    formData.append("SoQuyen", parseInt(dataUpdate.value.SoQuyen, 10));
-    formData.append("NamXB", dataUpdate.value.NamXB);
-    formData.append("TacGia", dataUpdate.value.TacGia);
-    formData.append("TheLoai", dataUpdate.value.TheLoai);
-    formData.append("TenNXB", dataUpdate.value.TenNXB);
-    formData.append("AnhSach", dataUpdate.value.AnhSach);
-    confirmLoading.value = true;
-    const res = await Service.update_Book(formData);
-    confirmLoading.value = false;
+    const updateData = {
+      id: dataUpdate.value.id,
+      TenSach: dataUpdate.value.TenSach,
+      MaNXB: dataUpdate.value.MaNXB,
+      TacGia: dataUpdate.value.TacGia,
+      DonGia: dataUpdate.value.DonGia,
+      SoQuyen: dataUpdate.value.SoQuyen,
+      NamXB: dataUpdate.value.NamXB,
+      TheLoai: dataUpdate.value.TheLoai,
+      AnhSach: dataUpdate.value.AnhSach,
+    };
+    console.log("--------trước", updateData);
+    const res = await Service.update_Book(updateData);
+
     if (res && res.data && res.data.EC === 0) {
-      toast.success("Cập nhật sách thành công");
+      toast.success("Cập nhật nhà xuất bản thành công.");
       props.fetchData();
       handleClose();
+      console.log("---------sau", res);
     } else {
       toast.error(res.data.EM);
     }
   } catch (error) {
-    console.log("error >>> ", error);
-    return;
+    console.error("Error while updating publisher:", error);
+    toast.error("Có lỗi xảy ra khi cập nhật.");
+  } finally {
+    confirmLoading.value = false;
   }
 };
 </script>
@@ -85,16 +95,13 @@ const handleSucces = async () => {
   <div>
     <a-modal
       :open="isShowModalUpdate"
-      title="Cập nhật sách "
-      @ok="handleSucces"
+      title="Cập nhật  sách "
+      @ok="handleSuccess"
       @cancel="closeModalUpdate"
       :style="{ top: '10px' }"
       :width="900"
     >
       <form>
-        <div class="d-none">
-          <input v-model="dataUpdate.id" />
-        </div>
         <div class="mb-3">
           <label class="form-label">Nhập tên sách</label>
           <input
@@ -104,21 +111,43 @@ const handleSucces = async () => {
           />
         </div>
         <div class="mb-3">
-          <label class="form-label">Tác giả</label>
+          <label class="form-label">Tác Giả </label>
           <input v-model="dataUpdate.TacGia" type="text" class="form-control" />
         </div>
         <div class="mb-3">
-          <label class="form-label">Nhà xuất bản</label>
-          <input v-model="dataUpdate.TenNXB" type="text" class="form-control" />
+          <label class="form-label">Nhà Xuất Bản</label>
+          <a-select
+            ref="select"
+            v-model="dataUpdate.MaNXB"
+            style="width: 853px"
+          >
+            <a-select-option
+              v-for="item in listPublish"
+              :value="item._id"
+              :key="item._id"
+            >
+              {{ item.TenNXB }}</a-select-option
+            >
+          </a-select>
         </div>
-        <div class="mb-3 row">
+
+        <div class="mt-3 row">
           <div class="col-6">
-            <label class="form-label">Năm xuất bản</label>
-            <input v-model="dataUpdate.NamXB" class="form-control" />
+            <label class="form-label">Năm Xuất Bản</label>
+            <input
+              v-model="dataUpdate.NamXB"
+              type="text"
+              class="form-control"
+            />
+            <label class="form-label">Số lượng sách</label>
+            <input
+              v-model="dataUpdate.SoQuyen"
+              type="text"
+              class="form-control"
+            />
           </div>
           <div class="col-6">
             <label class="form-label">Thể loại</label>
-
             <select v-model="dataUpdate.TheLoai" class="form-select">
               <option value="kinh tế">Kinh tế</option>
               <option value="tôn giáo">Tôn giáo</option>
@@ -127,41 +156,10 @@ const handleSucces = async () => {
               <option value="truyện cười">Truyện cười</option>
               <option value="sức khỏe">Sức khỏe</option>
             </select>
-          </div>
-        </div>
 
-        <div class="mt-3 row">
-          <div class="col mt-3">
-            <div class="d-flex">
-              <div
-                class="border mx-3 rounded d-flex justify-content-center align-items-center"
-              >
-                <img :src="imagePage" height="100" width="100" alt="notFound" />
-              </div>
-
-              <Upload
-                v-model="AnhSach"
-                @change="handleChangeImage"
-                list-type="picture-card"
-                :max-count="1"
-                :multiple="false"
-              >
-                <div>
-                  <div class="ant-upload-text">Upload</div>
-                </div>
-              </Upload>
-            </div>
-          </div>
-          <div class="col">
-            <label class="form-label">Giá</label>
+            <label class="form-label">Đơn Giá</label>
             <input
               v-model="dataUpdate.DonGia"
-              type="text"
-              class="form-control"
-            />
-            <label class="form-label">Số lượng sách</label>
-            <input
-              v-model="dataUpdate.SoQuyen"
               type="text"
               class="form-control"
             />

@@ -32,6 +32,7 @@ const pagination = computed(() => ({
 
 // MODAL UPDATE BOOK
 const handleUpdate = async (data) => {
+  console.log(data);
   isShowModalUpdate.value = true;
   dataModalUpdate.value = data;
 };
@@ -69,7 +70,7 @@ const columns = [
   },
   {
     title: "Nhà Xuất Bản",
-    dataIndex: "TenNXB",
+    dataIndex: ["MaNXB", "TenNXB"],
     key: "TenNXB",
   },
   {
@@ -111,8 +112,10 @@ const fetchData = async () => {
   if (data && data.data.EC === 0 && data.data.DT.pagination.length > 0) {
     listBook.value = data.data.DT.pagination;
     total.value = data.data.DT?.meta?.total;
+    console.log(listBook);
   }
 };
+
 onMounted(() => {
   fetchData();
 });

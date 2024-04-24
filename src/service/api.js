@@ -43,7 +43,12 @@ const readPanigation_Publish = async (rawData) => {
 };
 
 const update_Publish = async (rawData) => {
-  return axios.patch(`/api/publish/update`, rawData);
+  console.log(rawData);
+  return axios.put(`/api/publish/update`, rawData);
+};
+
+const getAll_Publish = async () => {
+  return axios.get(`/api/publish/getallpublish`);
 };
 
 const delete_Publish = async (rawData) => {
@@ -61,7 +66,7 @@ const read_Publish = async (rawData) => {
 
 // MODULE User
 const update_User = async (rawData) => {
-  return axios.patch(`/api/reader/update`, rawData);
+  return axios.put("/api/reader/update", rawData);
 };
 
 const readPanigation_User = async (rawData) => {
@@ -75,7 +80,7 @@ const readPanigation_Cart = async (rawData) => {
 };
 
 const updateNumBer_Cart = async (rawData) => {
-  return axios.patch(`/api/cart/update`, rawData);
+  return axios.put(`/api/cart/update`, rawData);
 };
 
 const deleteItem_Cart = async (rawData) => {
@@ -139,10 +144,13 @@ export default {
   readPanigation_Staff,
   readPanigation_Publish,
   create_Publish,
+  update_Publish,
+  getAll_Publish,
   create_Book,
   update_Book,
   delete_Book,
   read_Book,
+  delete_Publish,
   readPanigate_Book,
   create_Cart,
   deleteItem_Cart,

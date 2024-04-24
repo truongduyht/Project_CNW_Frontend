@@ -101,7 +101,7 @@ const getStatusText = (Status) => {
   if (Status == 0) {
     return "Chưa gửi";
   } else if (Status == 1) {
-    return "Đã gửi";
+    return "Đã nhận";
   } else if (Status == 2) {
     return "Đã trả";
   } else {
@@ -126,7 +126,7 @@ const handleDeleteOrder = async (data) => {
     <div>
       <a-tabs v-model="activeKey" @change="handleTabChange">
         <a-tab-pane key="0" tab="Đơn sách chưa gửi"> </a-tab-pane>
-        <a-tab-pane key="1" tab="Đơn sách đã gửi"> </a-tab-pane>
+        <a-tab-pane key="1" tab="Đơn sách đã nhận"> </a-tab-pane>
         <a-tab-pane key="2" tab="Đơn sách đã trả"> </a-tab-pane>
         <a-tab-pane key="3" tab="Đơn sách bị hủy"> </a-tab-pane>
       </a-tabs>

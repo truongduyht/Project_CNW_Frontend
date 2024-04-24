@@ -123,7 +123,7 @@ const getStatusText = (Status) => {
   if (Status == 0) {
     return "Chưa gửi";
   } else if (Status == 1) {
-    return "Đã nhận";
+    return "Đã gửi";
   } else if (Status == 2) {
     return "Đã trả";
   } else {
@@ -146,7 +146,7 @@ const activeKey2 = ref(["1"]);
     <div>
       <a-tabs v-model="activeKey" @change="handleTabChange">
         <a-tab-pane key="0" tab="Đơn hàng chưa gửi"> </a-tab-pane>
-        <a-tab-pane key="1" tab="Đơn hàng đã nhận"> </a-tab-pane>
+        <a-tab-pane key="1" tab="Đơn hàng đã gửi"> </a-tab-pane>
         <a-tab-pane key="2" tab="Đơn hàng đã trả"> </a-tab-pane>
         <a-tab-pane key="3" tab="Đơn hàng bị hủy"> </a-tab-pane>
       </a-tabs>
@@ -202,10 +202,6 @@ const activeKey2 = ref(["1"]);
           </template>
 
           <template v-if="column.key === 'OrderDetail'">
-            <!-- <div v-for="item in record.OrderDetail" :key="item._id"  class="d-flex">
-              <div>{{ item?.MSHH?.TenHH }}</div>
-              <div class="text-warning mx-3"> x{{ item?.SoLuong }}</div>
-            </div> -->
             <a-collapse v-model="activeKey2">
               <a-collapse-panel key="1" header="Chi tiết đơn hàng">
                 <div
