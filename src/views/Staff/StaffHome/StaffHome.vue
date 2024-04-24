@@ -1,6 +1,11 @@
 <template>
   <div class="">
     <h2 class="text-center">Welcome Back {{ profile?._HoTen }}</h2>
+    <img
+      style="width: 500px; margin-left: 300px"
+      src="../../../../public/images/logoHome/ảnh2.jpg"
+      alt=""
+    />
   </div>
 </template>
 
