@@ -59,11 +59,6 @@ const columns = [
     dataIndex: "DiaChi",
     key: "DiaChi",
   },
-  //   {
-  //     title: "Ngày Thêm",
-  //     dataIndex: "createdAt",
-  //     key: "createdAt",
-  //   },
   {
     title: "Thao tác",
     key: "action",
