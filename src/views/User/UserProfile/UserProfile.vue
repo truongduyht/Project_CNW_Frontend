@@ -1,17 +1,5 @@
 <script setup>
 import { authenticationStore } from "../../../stores/authenticationStore";
-import ModalUpdateUser from "./ModalUpdateUser/ModalUpdateUser.vue";
-
-const isShowModalUpdate = ref(false);
-const dataModalUpdate = ref({});
-
-const handleUpdate = async (data) => {
-  isShowModalUpdate.value = true;
-  dataModalUpdate.value = data;
-};
-const closeModalUpdate = () => {
-  isShowModalUpdate.value = false;
-};
 </script>
 
 <template>
@@ -38,18 +26,6 @@ const closeModalUpdate = () => {
                 Địa Chỉ:
                 {{ authenticationStore()?.getUser()?._DiaChi || "" }}
               </div>
-            </div>
-            <div>
-              <button
-                class="btn btn-sm border border-primary"
-                @click="() => handleUpdate()"
-              ></button>
-              <ModalUpdateUser
-                :isShowModalUpdate="isShowModalUpdate"
-                :closeModalUpdate="closeModalUpdate"
-                :dataModalUpdate="dataModalUpdate"
-                :fetchData="fetchData"
-              />
             </div>
           </div>
         </div>
