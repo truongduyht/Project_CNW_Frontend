@@ -14,11 +14,9 @@ const props = defineProps({
 const dataUpdate = ref({
   id: "",
   TenSach: "",
-  MaNXB: "",
   TheLoai: "",
   TacGia: "",
   NamXB: "",
-  AnhSach: "",
   DonGia: 0,
   SoQuyen: 0,
 });
@@ -28,14 +26,12 @@ const confirmLoading = ref(false);
 const imagePage = ref("");
 watchEffect(() => {
   dataUpdate.value.id = props.dataModalUpdate._id || "";
-  dataUpdate.value.MaNXB = props.dataModalUpdate.MaNXB || "";
   dataUpdate.value.TacGia = props.dataModalUpdate.TacGia || "";
   dataUpdate.value.DonGia = props.dataModalUpdate.DonGia || "";
   dataUpdate.value.SoQuyen = props.dataModalUpdate.SoQuyen || "";
   dataUpdate.value.TheLoai = props.dataModalUpdate.TheLoai || "";
   dataUpdate.value.TenSach = props.dataModalUpdate.TenSach || "";
   dataUpdate.value.NamXB = props.dataModalUpdate.NamXB || "";
-  imagePage.value = props.dataModalUpdate.AnhSach || "";
 });
 
 // Xử lí hình ảnh
@@ -63,13 +59,11 @@ const handleSuccess = async () => {
     const updateData = {
       id: dataUpdate.value.id,
       TenSach: dataUpdate.value.TenSach,
-      MaNXB: dataUpdate.value.MaNXB,
       TacGia: dataUpdate.value.TacGia,
       DonGia: dataUpdate.value.DonGia,
       SoQuyen: dataUpdate.value.SoQuyen,
       NamXB: dataUpdate.value.NamXB,
       TheLoai: dataUpdate.value.TheLoai,
-      AnhSach: dataUpdate.value.AnhSach,
     };
     console.log("--------trước", updateData);
     const res = await Service.update_Book(updateData);
@@ -99,7 +93,7 @@ const handleSuccess = async () => {
       @ok="handleSuccess"
       @cancel="closeModalUpdate"
       :style="{ top: '10px' }"
-      :width="900"
+      :width="600"
     >
       <form>
         <div class="mb-3">
@@ -113,22 +107,6 @@ const handleSuccess = async () => {
         <div class="mb-3">
           <label class="form-label">Tác Giả </label>
           <input v-model="dataUpdate.TacGia" type="text" class="form-control" />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Nhà Xuất Bản</label>
-          <a-select
-            ref="select"
-            v-model="dataUpdate.MaNXB"
-            style="width: 853px"
-          >
-            <a-select-option
-              v-for="item in listPublish"
-              :value="item._id"
-              :key="item._id"
-            >
-              {{ item.TenNXB }}</a-select-option
-            >
-          </a-select>
         </div>
 
         <div class="mt-3 row">

@@ -84,13 +84,6 @@ watchEffect(() => {
 watch([current, pageSize, type, sort], () => {
   fetchData();
 });
-
-const handleRefetchIcon = () => {
-  (current.value = 1),
-    (pageSize.value = 8),
-    (type.value = ""),
-    (sort.value = "createdAt");
-};
 </script>
 
 <template>
